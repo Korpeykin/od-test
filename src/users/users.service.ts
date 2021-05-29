@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from 'src/database/database.service';
 import UserJwt from './interfaces/userJwt';
 import { GetUser } from './interfaces/getUser';
@@ -7,10 +6,7 @@ import PutUserDto from './dto/putUser.dto';
 import PutUserResponse from './interfaces/putUserResponse';
 @Injectable()
 export class UsersService {
-  constructor(
-    private configService: ConfigService,
-    private dbService: DatabaseService,
-  ) {}
+  constructor(private dbService: DatabaseService) {}
 
   async getUser(user: UserJwt): Promise<GetUser> {
     const data = await this.dbService.getUser(user.userId);

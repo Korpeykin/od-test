@@ -29,6 +29,7 @@ export class Tag extends Model {
 
   @Column({
     type: DataType.STRING(40),
+    unique: true,
   })
   name: string;
 

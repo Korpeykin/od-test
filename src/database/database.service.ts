@@ -6,12 +6,16 @@ import { Users } from './pg/users.entity';
 import { ConfigService } from '@nestjs/config';
 import IUser from 'src/auth/interfaces/user';
 import { Tag } from './pg/tag.entity';
+import PostTagDto from 'src/tags/dto/postTag';
+import InsertTag from './interfaces/insertTag';
 
 @Injectable()
 export class DatabaseService {
   constructor(
     @Inject('PG_USERS_REPOSITORY')
     private pgUsers: typeof Users,
+    @Inject('PG_TAG_REPOSITORY')
+    private pgTags: typeof Tag,
     private config: ConfigService,
   ) {}
 
@@ -61,6 +65,30 @@ export class DatabaseService {
         uid,
       },
       cascade: false,
+    });
+  }
+
+  async createTag(data: PostTagDto, uid: string) {
+    const insertObj: InsertTag = {
+      name: data.name,
+      creator: uid,
+    };
+    if (data.sortOrder) {
+      insertObj.sortOrder = data.sortOrder;
+    }
+    try {
+      const tag = new this.pgTags(insertObj);
+      return await tag.save();
+    } catch (error) {
+      throw new BadRequestException(`Dublicate ${error.original.constraint}`);
+    }
+  }
+
+  async getTag(id: number) {
+    return await this.pgTags.findOne({
+      where: {
+        id,
+      },
     });
   }
 }
