@@ -8,6 +8,7 @@ import IUser from 'src/auth/interfaces/user';
 import { Tag } from './pg/tag.entity';
 import PostTagDto from 'src/tags/dto/postTag';
 import InsertTag from './interfaces/insertTag';
+import QueryTags from './interfaces/queryTags';
 
 @Injectable()
 export class DatabaseService {
@@ -86,9 +87,27 @@ export class DatabaseService {
 
   async getTag(id: number) {
     return await this.pgTags.findOne({
+      include: { model: Users, attributes: ['uid', 'nickname'] },
       where: {
         id,
       },
+    });
+  }
+
+  async getTags(data: QueryTags) {
+    const order = [];
+    if (data.sortByName) {
+      order.push(['name', 'DESC']);
+    }
+    if (data.sortByOrder) {
+      order.push(['id', 'DESC']);
+    }
+    return await this.pgTags.findAndCountAll({
+      include: { model: Users, attributes: ['uid', 'nickname'] },
+      attributes: ['name', 'sortOrder'],
+      offset: data.offset ? data.offset : undefined,
+      limit: data.length ? data.length : undefined,
+      order: order.length !== 0 ? order : undefined,
     });
   }
 }
