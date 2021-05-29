@@ -8,6 +8,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 export class Tag extends Model {
   @Column({
     type: DataType.INTEGER,
+    primaryKey: true,
   })
   id: string;
 

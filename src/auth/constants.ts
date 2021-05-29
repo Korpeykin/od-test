@@ -5,4 +5,5 @@ export const jwtConstants = {
     const config = new ConfigService();
     return config.get('JWT_SECRET');
   },
+  blackListName: 'jwtBlackList',
 };

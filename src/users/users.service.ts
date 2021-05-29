@@ -6,15 +6,7 @@ export type User = any;
 export class UsersService {
   private readonly ad: any;
 
-  constructor(private configService: ConfigService) {
-    const ActiveDirectory = require('activedirectory2');
-    this.ad = new ActiveDirectory({
-      url: this.configService.get<string>('LDAP_URL'),
-      baseDN: this.configService.get<string>('BASE_DN'),
-      username: this.configService.get<string>('LDAP_USERNAME'),
-      password: this.configService.get<string>('LDAP_PASS'),
-    });
-  }
+  constructor(private configService: ConfigService) {}
 
   findOne(username: string): Promise<User | undefined> {
     return new Promise((resolve, reject) => {

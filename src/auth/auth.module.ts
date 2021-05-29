@@ -7,9 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
+import { DatabaseService } from 'src/database/database.service';
+import { DatabaseModule } from 'src/database/database.module';
+import { pgProviders } from 'src/database/pg/pg.providers';
 
 @Module({
   imports: [
+    DatabaseModule,
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({
@@ -17,7 +21,7 @@ import { ConfigService } from '@nestjs/config';
         return {
           secret: config.get<string>('JWT_SECRET'),
           signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+            expiresIn: config.get<number>('JWT_EXPIRATION_TIME'),
           },
         };
       },
@@ -25,7 +29,13 @@ import { ConfigService } from '@nestjs/config';
     }),
     CacheModule.register(),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    DatabaseService,
+    ...pgProviders,
+  ],
   exports: [AuthService],
   controllers: [AuthController],
 })
