@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { Users } from './users.entity';
 
 @Table({
   tableName: 'Tag',
@@ -8,10 +16,12 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 export class Tag extends Model {
   @Column({
     type: DataType.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   })
   id: string;
 
+  @ForeignKey(() => Users)
   @Column({
     type: DataType.UUID,
   })
@@ -27,4 +37,7 @@ export class Tag extends Model {
     defaultValue: 0,
   })
   sortOrder: string;
+
+  @BelongsTo(() => Users)
+  user: Users;
 }

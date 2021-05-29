@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Tag } from './tag.entity';
 
 @Table({
   tableName: 'Users',
@@ -25,6 +26,10 @@ export class Users extends Model {
 
   @Column({
     type: DataType.STRING(30),
+    unique: true,
   })
   nickname: string;
+
+  @HasMany(() => Tag)
+  tags: Tag[];
 }

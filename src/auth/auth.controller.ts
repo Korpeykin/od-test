@@ -20,7 +20,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
-    // const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     return this.authService.login(req.user);
   }
 

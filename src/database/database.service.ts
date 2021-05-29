@@ -5,6 +5,7 @@ import SignInDto from 'src/auth/dto/signin.dto';
 import { Users } from './pg/users.entity';
 import { ConfigService } from '@nestjs/config';
 import IUser from 'src/auth/interfaces/user';
+import { Tag } from './pg/tag.entity';
 
 @Injectable()
 export class DatabaseService {
@@ -41,6 +42,25 @@ export class DatabaseService {
       where: {
         email,
       },
+    });
+  }
+
+  async getUser(uid: string) {
+    const user = await this.pgUsers.findOne({
+      include: { model: Tag, attributes: ['id', 'name', 'sortOrder'] },
+      where: {
+        uid,
+      },
+    });
+    return user;
+  }
+
+  async deleteUser(uid: string) {
+    return await this.pgUsers.destroy({
+      where: {
+        uid,
+      },
+      cascade: false,
     });
   }
 }

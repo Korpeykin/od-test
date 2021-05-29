@@ -4,7 +4,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { Cache } from 'cache-manager';
@@ -24,7 +23,6 @@ export class AuthService {
   // private _jwtBlackList: JwtBlackList[] = [];
   constructor(
     private databaseService: DatabaseService,
-    private usersService: UsersService,
     private jwtService: JwtService,
     private config: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -147,7 +145,8 @@ export class AuthService {
     const blackList: JwtBlackList[] = JSON.parse(
       await this.cacheManager.get<string>(jwtConstants.blackListName),
     );
-    if (blackList.find((row) => row.token === token)) {
+    const pass = blackList.find((row) => row.token === token);
+    if (!pass) {
       blackList.push({
         token,
         timestamp: Date.now(),
