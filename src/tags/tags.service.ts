@@ -25,6 +25,9 @@ export class TagsService {
 
   async getTag(id: number): Promise<GetTagResponse> {
     const data = await this.dbService.getTag(id);
+    if (!data) {
+      throw new BadRequestException('There is not tag with this id');
+    }
     return {
       creator: {
         nickname: data.user.nickname,
