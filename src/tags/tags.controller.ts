@@ -6,6 +6,9 @@ import {
   Body,
   Param,
   Query,
+  Post,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import { AuthService } from 'src/auth/auth.service';
@@ -13,6 +16,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import GetTagDto from './dto/getTag';
 import GetTagsDto from './dto/getTags';
 import PostTagDto from './dto/postTag';
+import PostUserTagsDto from './dto/postUserTags';
 import PutTagDto from './dto/putTag';
 import { TagsService } from './tags.service';
 
@@ -24,7 +28,7 @@ export class TagsController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get('post-tag')
+  @Post('post-tag')
   async postTags(@Request() req, @Body() data: PostTagDto) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     await this.authService.authJwt(token);
@@ -48,7 +52,7 @@ export class TagsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('put-tag/:id')
+  @Put('put-tag/:id')
   async putTag(
     @Param() param: GetTagDto,
     @Body() body: PutTagDto,
@@ -60,10 +64,18 @@ export class TagsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('delete-tag/:id')
+  @Delete('delete-tag/:id')
   async deleteTag(@Param() param: GetTagDto, @Request() req) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     await this.authService.authJwt(token);
     return this.tagsService.deleteTag(req.user.userId, param.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('user/tag')
+  async postUserTag(@Body() body: PostUserTagsDto, @Request() req) {
+    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    await this.authService.authJwt(token);
+    return this.tagsService.postUserTag(body, req.user.userId);
   }
 }

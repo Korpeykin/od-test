@@ -5,17 +5,16 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-  HasMany,
 } from 'sequelize-typescript';
+import { Tag } from './tag.entity';
 import { Users } from './users.entity';
-import { UserTags } from './user-tag.entity';
 
 @Table({
-  tableName: 'Tag',
+  tableName: 'UserTags',
   timestamps: false,
-  modelName: 'Tag',
+  modelName: 'UserTags',
 })
-export class Tag extends Model {
+export class UserTags extends Model {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -27,23 +26,17 @@ export class Tag extends Model {
   @Column({
     type: DataType.UUID,
   })
-  creator: string;
+  userId: string;
 
-  @Column({
-    type: DataType.STRING(40),
-    unique: true,
-  })
-  name: string;
-
+  @ForeignKey(() => Tag)
   @Column({
     type: DataType.INTEGER,
-    defaultValue: 0,
   })
-  sortOrder: string;
+  tagId: number;
+
+  @BelongsTo(() => Tag)
+  tag: Tag;
 
   @BelongsTo(() => Users)
   user: Users;
-
-  @HasMany(() => UserTags)
-  userTags: UserTags[];
 }

@@ -6,6 +6,9 @@ import GetTagResponse from './interfaces/getTagResponse';
 import PostTagResponse from './interfaces/postTagResponse';
 import GetTagsResponse from './interfaces/getTagsResponse';
 import PutTagDto from './dto/putTag';
+import PostUserTagsDto from './dto/postUserTags';
+import UserTagInsert from '../database/interfaces/userTagInsert';
+import PostUserTags from './interfaces/postUserTags';
 
 @Injectable()
 export class TagsService {
@@ -97,5 +100,34 @@ export class TagsService {
     }
     tag.destroy();
     return;
+  }
+
+  async postUserTag(
+    body: PostUserTagsDto,
+    userId: string,
+  ): Promise<PostUserTags> {
+    const tags = await this.dbService.getAllTagsFromArray(body.tags);
+    const dbQuery: UserTagInsert[] = [];
+    body.tags.forEach((tagId) => {
+      if (!tags.find((tag) => tagId === Number(tag.id))) {
+        throw new BadRequestException(`Tag with id=${tagId} not exists`);
+      }
+      dbQuery.push({
+        tagId,
+        userId,
+      });
+    });
+    const apiResponse: PostUserTags = {
+      tags: [],
+    };
+    await this.dbService.bulkUserTagsCreate(dbQuery);
+    tags.forEach((tag) => {
+      apiResponse.tags.push({
+        id: Number(tag.id),
+        name: tag.name,
+        sortOrder: tag.sortOrder,
+      });
+    });
+    return apiResponse;
   }
 }

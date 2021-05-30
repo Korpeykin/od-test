@@ -9,14 +9,22 @@ import { Tag } from './pg/tag.entity';
 import PostTagDto from 'src/tags/dto/postTag';
 import InsertTag from './interfaces/insertTag';
 import QueryTags from './interfaces/queryTags';
+import { Op } from 'sequelize';
+import { UserTags } from './pg/user-tag.entity';
+import UserTagInsert from './interfaces/userTagInsert';
 
 @Injectable()
 export class DatabaseService {
   constructor(
     @Inject('PG_USERS_REPOSITORY')
     private pgUsers: typeof Users,
+
     @Inject('PG_TAG_REPOSITORY')
     private pgTags: typeof Tag,
+
+    @Inject('PG_USER_TAG_REPOSITORY')
+    private pgUserTags: typeof UserTags,
+
     private config: ConfigService,
   ) {}
 
@@ -108,6 +116,26 @@ export class DatabaseService {
       offset: data.offset ? data.offset : undefined,
       limit: data.length ? data.length : undefined,
       order: order.length !== 0 ? order : undefined,
+    });
+  }
+
+  async getAllTagsFromArray(arr: number[]) {
+    return await this.pgTags.findAll({
+      where: {
+        id: {
+          [Op.in]: arr,
+        },
+      },
+    });
+  }
+
+  async bulkUserTagsCreate(data: UserTagInsert[]) {
+    return await this.pgUserTags.bulkCreate(data, {
+      include: {
+        model: Tag,
+        as: 'tag',
+        attributes: ['id', 'name', 'sortOrder'],
+      },
     });
   }
 }

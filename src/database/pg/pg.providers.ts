@@ -1,5 +1,6 @@
 import { Tag } from './tag.entity';
 import { Users } from './users.entity';
+import { UserTags } from './user-tag.entity';
 
 export const pgProviders = [
   {
@@ -9,5 +10,9 @@ export const pgProviders = [
   {
     provide: 'PG_TAG_REPOSITORY',
     useValue: Tag,
+  },
+  {
+    provide: 'PG_USER_TAG_REPOSITORY',
+    useValue: UserTags,
   },
 ];
