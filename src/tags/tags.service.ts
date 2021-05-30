@@ -130,4 +130,41 @@ export class TagsService {
     });
     return apiResponse;
   }
+
+  async deleteUserTag(id: number, uid: string): Promise<PostUserTags> {
+    const allUsersTags = await this.dbService.getAllUsersTagsFromUserTags(uid);
+    const usersTag = allUsersTags.find((tag, index) => {
+      if (Number(tag.tagId) === Number(id)) {
+        allUsersTags.splice(index, 1);
+        return true;
+      }
+    });
+    await usersTag?.destroy();
+    const apiResponse: PostUserTags = {
+      tags: [],
+    };
+    allUsersTags.forEach((tag) => {
+      apiResponse.tags.push({
+        id: Number(tag.tag.id),
+        name: tag.tag.name,
+        sortOrder: tag.tag.sortOrder,
+      });
+    });
+    return apiResponse;
+  }
+
+  async getUserTagMy(uid: string): Promise<PostUserTags> {
+    const tags = await this.dbService.getMyTags(uid);
+    const apiResponse: PostUserTags = {
+      tags: [],
+    };
+    tags.forEach((tag) => {
+      apiResponse.tags.push({
+        id: Number(tag.id),
+        name: tag.name,
+        sortOrder: tag.sortOrder,
+      });
+    });
+    return apiResponse;
+  }
 }

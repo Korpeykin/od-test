@@ -138,4 +138,24 @@ export class DatabaseService {
       },
     });
   }
+
+  async getAllUsersTagsFromUserTags(uid: string) {
+    return await this.pgUserTags.findAll({
+      include: {
+        model: Tag,
+        attributes: ['id', 'name', 'sortOrder'],
+      },
+      where: {
+        userId: uid,
+      },
+    });
+  }
+
+  async getMyTags(uid: string) {
+    return await this.pgTags.findAll({
+      where: {
+        creator: uid,
+      },
+    });
+  }
 }

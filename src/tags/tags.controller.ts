@@ -78,4 +78,20 @@ export class TagsController {
     await this.authService.authJwt(token);
     return this.tagsService.postUserTag(body, req.user.userId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('user/tag/:id')
+  async deleteUserTag(@Param() param: GetTagDto, @Request() req) {
+    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    await this.authService.authJwt(token);
+    return this.tagsService.deleteUserTag(param.id, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/user/tag/my')
+  async getUserTagMy(@Request() req) {
+    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    await this.authService.authJwt(token);
+    return this.tagsService.getUserTagMy(req.user.userId);
+  }
 }
