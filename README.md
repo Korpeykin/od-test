@@ -492,6 +492,7 @@ HEADER: `Authorization: Bearer {token}`
     }
   ]
 }
+```
 ## License
 
 Nest is [MIT licensed](LICENSE).
