@@ -32,8 +32,6 @@
 $ npm install
 ```
 
-
-
 Для запуска программы необходимо создать в корне приложения файл .env и заполнитье его данными, приведенными в example.env.
 Все таблицы создадуться самостоятельно.
 # Поля example.env
@@ -49,7 +47,7 @@ PG_DATABASE=
 
 SALT_ROUNDS=хеширование пароля
 ```
-## Running the app
+## Запуск приложения
 ```bash
 # development
 $ npm run start
@@ -59,19 +57,6 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 # Описание апи:
