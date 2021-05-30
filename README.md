@@ -74,21 +74,9 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## Описание апи:
-
-## Модуль auth:
-
-# POST /auth/signin
+# Описание апи:
+# Модуль auth:
+## POST /auth/signin
 
 Регистрация нового пользователя:
 
@@ -117,8 +105,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
   "expire": "18000000"
 }
 ```
-
-# POST /auth/login
+## POST /auth/login
 
 Аутентификация пользователя:
 
@@ -142,8 +129,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
   "expire": "18000000"
 }
 ```
-
-# GET /auth/profile
+## GET /auth/profile
 
 Роут для проверки токена при переходе со страницы на страницу на фронте
 
@@ -159,8 +145,7 @@ HEADER: `Authorization: Bearer {token}`
   "username": "example@exe.com"
 }
 ```
-
-# POST /auth/refresh-access
+## POST /auth/refresh-access
 
 Выдача нового аксес токена, при предоставлении валидного рефреш-токена
 
@@ -188,18 +173,15 @@ HEADER: `Authorization: Bearer {token}`
   "access_token": "token"
 }
 ```
-
-# GET /auth/logout
+## GET /auth/logout
 
 Разлогинивание пользователя.
 
 Вход:
 
 HEADER: `Authorization: Bearer {token}`
-
-## Модуль user:
-
-# GET /users/user
+# Модуль user:
+## GET /users/user
 
 Получение данных юзера:
 
@@ -237,8 +219,7 @@ HEADER: `Authorization: Bearer {token}`
   ]
 }
 ```
-
-# PUT /users/put-user
+## PUT /users/put-user
 
 Изменяет данные пользователя:
 
@@ -268,8 +249,7 @@ HEADER: `Authorization: Bearer {token}`
   "nickname": "chang1e"
 }
 ```
-
-# DELETE /users/delete-user
+## DELETE /users/delete-user
 
 Удаляет и разлогинивает пользователя:
 
@@ -277,9 +257,8 @@ HEADER: `Authorization: Bearer {token}`
 
 HEADER: `Authorization: Bearer {token}`
 
-## Модуль tag:
-
-# POST /tags/post-tag
+# Модуль tag:
+## POST /tags/post-tag
 
 Создание тега юзером.
 
@@ -308,8 +287,7 @@ HEADER: `Authorization: Bearer {token}`
   "sortOrder": "0"
 }
 ```
-
-# GET /tags/get-tag/:id
+## GET /tags/get-tag/:id
 
 Получения тега и информации о его создателе по id тега.
 
@@ -330,7 +308,7 @@ HEADER: `Authorization: Bearer {token}`
 }
 ```
 
-# GET /tags/get-tags
+## GET /tags/get-tags
 
 Вход:
 
@@ -375,7 +353,7 @@ Query params: ?sortByOrder&sortByName&offset=10&length=10
 }
 ```
 
-# PUT /tags/put-tag/:id
+## PUT /tags/put-tag/:id
 Изменение тега, Тэг может менять только владелец.
 
 Вход:
@@ -405,15 +383,14 @@ HEADER: `Authorization: Bearer {token}`
   "sortOrder": "0"
 }
 ```
-# DELETE /tags/delete-tag/:id
+## DELETE /tags/delete-tag/:id
 Удаление тега, тег может удалить только владелец.
 Каскадом удалем все связанные записи с этим Тэгом.
 
 Вход:
 id;
 HEADER: `Authorization: Bearer {token}`
-
-# POST /tags/user/tag
+## POST /tags/user/tag
 Прикоепляет к юзеру указанные теги.
 Проверяеются тэги на наличие в базе и добавляются к пользователю.
 
@@ -455,7 +432,7 @@ HEADER: `Authorization: Bearer {token}`
   ]
 }
 ```
-# DELETE /tags/user/tag
+## DELETE /tags/user/tag
 Удаляет привязанный к текущему юзеру тег по айди.
 Возвращает все привязанные к юзеру теги после удаления.
 
@@ -486,7 +463,7 @@ HEADER: `Authorization: Bearer {token}`
   ]
 }
 ```
-# GET /tags/user/tag/my
+## GET /tags/user/tag/my
 Возвращает теги, у которых текущий юзер является создателем.
 
 Вход:
