@@ -32,8 +32,24 @@
 $ npm install
 ```
 
-## Running the app
 
+
+Для запуска программы необходимо создать в корне приложения файл .env и заполнитье его данными, приведенными в example.env.
+Все таблицы создадуться самостоятельно.
+# Поля example.env
+```code
+JWT_SECRET=секретный код авторизации
+JWT_EXPIRATION_TIME=время жизни аксесс токена, указывать числом в милисекундах
+
+PG_HOST=хост постгрика
+PG_PORT=порт постгрика
+PG_USERNAME=
+PG_PASSWORD=
+PG_DATABASE=
+
+SALT_ROUNDS=хеширование пароля
+```
+## Running the app
 ```bash
 # development
 $ npm run start
@@ -71,6 +87,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## Описание апи:
 
 ## Модуль auth:
+
 # POST /auth/signin
 
 Регистрация нового пользователя:
@@ -132,7 +149,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Вход:
 
-HEADER: ```Authorization: Bearer {token}```
+HEADER: `Authorization: Bearer {token}`
 
 Выход:
 
@@ -142,6 +159,7 @@ HEADER: ```Authorization: Bearer {token}```
   "username": "example@exe.com"
 }
 ```
+
 # POST /auth/refresh-access
 
 Выдача нового аксес токена, при предоставлении валидного рефреш-токена
@@ -170,22 +188,24 @@ HEADER: ```Authorization: Bearer {token}```
   "access_token": "token"
 }
 ```
+
 # GET /auth/logout
 
 Разлогинивание пользователя.
 
 Вход:
 
-HEADER: ```Authorization: Bearer {token}```
+HEADER: `Authorization: Bearer {token}`
 
 ## Модуль user:
+
 # GET /users/user
 
 Получение данных юзера:
 
 Вход:
 
-HEADER: ```Authorization: Bearer {token}```
+HEADER: `Authorization: Bearer {token}`
 
 Выход:
 
@@ -220,9 +240,11 @@ HEADER: ```Authorization: Bearer {token}```
 
 # PUT /users/put-user
 
+Изменяет данные пользователя:
+
 Вход:
 
-HEADER: ```Authorization: Bearer {token}```
+HEADER: `Authorization: Bearer {token}`
 
 ```json
 {
@@ -231,6 +253,7 @@ HEADER: ```Authorization: Bearer {token}```
   "nickname": "chang1e"
 }
 ```
+
 Валидация:
 
 - refresh_token - Обязательное поле, проверка на то, что это uuid(v4)
@@ -246,7 +269,252 @@ HEADER: ```Authorization: Bearer {token}```
 }
 ```
 
-## License
+# DELETE /users/delete-user
 
+Удаляет и разлогинивает пользователя:
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+## Модуль tag:
+
+# POST /tags/post-tag
+
+Создание тега юзером.
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+```json
+{
+  "name": "example",
+  "sortOrder": "0"
+}
+```
+
+Валидация:
+
+- name - Обязательное поле, проверка на то, что это строка
+- sortOrder - Опциональное поле. Проверка на то, что это строка-номер. Если не указан, подставляется 0
+
+Выход:
+
+```json
+{
+  "id": "id",
+  "name": "example",
+  "sortOrder": "0"
+}
+```
+
+# GET /tags/get-tag/:id
+
+Получения тега и информации о его создателе по id тега.
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+Выход:
+
+```json
+{
+  "creator": {
+    "nickname": "example",
+    "uid": "exam-pl-eUID"
+  },
+  "name": "example",
+  "sortOrder": "0"
+}
+```
+
+# GET /tags/get-tags
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+Query params: ?sortByOrder&sortByName&offset=10&length=10
+
+Валидация:
+
+- sortByOrder - Опциональное поле, равно undefined (пустой строке)
+- sortByName - Опциональное поле, равно undefined (пустой строке)
+- offset - Опциональное поле. Проверка на то, что это цыфра.
+- length - Опциональное поле. Проверка на то, что это цыфра.
+
+Выход:
+
+```json
+{
+  "data": [
+    {
+      "creator": {
+        "nickname": "example",
+        "uid": "exam-pl-eUID"
+      },
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "creator": {
+        "nickname": "example",
+        "uid": "exam-pl-eUID"
+      },
+      "name": "example",
+      "sortOrder": "0"
+    }
+  ],
+  "meta": {
+    "offset": 10,
+    "length": 10,
+    "quantity": 100
+  }
+}
+```
+
+# PUT /tags/put-tag/:id
+Изменение тега, Тэг может менять только владелец.
+
+Вход:
+id;
+HEADER: `Authorization: Bearer {token}`
+
+```json
+{
+  "name": "example",
+  "sortOrder": "0"
+}
+```
+Валидация:
+
+- name - Обязательное поле, проверка на то, что это строка
+- sortOrder - Опциональное поле. Проверка на то, что это строка-номер. Если не указан, подставляется 0
+
+Выход:
+
+```json
+{
+  "creator": {
+    "nickname": "example",
+    "uid": "exam-pl-eUID"
+  },
+  "name": "example",
+  "sortOrder": "0"
+}
+```
+# DELETE /tags/delete-tag/:id
+Удаление тега, тег может удалить только владелец.
+Каскадом удалем все связанные записи с этим Тэгом.
+
+Вход:
+id;
+HEADER: `Authorization: Bearer {token}`
+
+# POST /tags/user/tag
+Прикоепляет к юзеру указанные теги.
+Проверяеются тэги на наличие в базе и добавляются к пользователю.
+
+Пример: Если тэга с id 2 нет в базе то и тэг с id 1 не добавится пользователю
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+```json
+{
+  "tags": [1, 2]
+}
+```
+Валидация:
+
+- tags - Обязательное поле, проверка на то, что это массив чисел, проверка на повторяющиеся цыфры в массиве
+
+Выход:
+
+```json
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 2,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 3,
+      "name": "example",
+      "sortOrder": "0"
+    }
+  ]
+}
+```
+# DELETE /tags/user/tag
+Удаляет привязанный к текущему юзеру тег по айди.
+Возвращает все привязанные к юзеру теги после удаления.
+
+Вход:
+id;
+HEADER: `Authorization: Bearer {token}`
+
+Выход:
+
+```json
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 2,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 3,
+      "name": "example",
+      "sortOrder": "0"
+    }
+  ]
+}
+```
+# GET /tags/user/tag/my
+Возвращает теги, у которых текущий юзер является создателем.
+
+Вход:
+
+HEADER: `Authorization: Bearer {token}`
+
+Выход:
+
+```json
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 2,
+      "name": "example",
+      "sortOrder": "0"
+    },
+    {
+      "id": 3,
+      "name": "example",
+      "sortOrder": "0"
+    }
+  ]
+}
+## License
 
 Nest is [MIT licensed](LICENSE).
