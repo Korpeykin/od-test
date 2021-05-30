@@ -67,6 +67,20 @@ export class DatabaseService {
     });
     return user;
   }
+  async putUser(uid: string) {
+    const user = await this.pgUsers.findOne({
+      where: {
+        uid,
+      },
+    });
+    return user;
+  }
+
+  async checkUserDublicate(email: string, nickname: string) {
+    return await this.pgUsers.findAll({
+      where: { [Op.or]: [{ email }, { nickname }] },
+    });
+  }
 
   async deleteUser(uid: string) {
     return await this.pgUsers.destroy({
@@ -104,15 +118,16 @@ export class DatabaseService {
 
   async getTags(data: QueryTags) {
     const order = [];
-    if (data.sortByName) {
+    const objKeys = Object.keys(data);
+    if (objKeys.includes('sortByName')) {
       order.push(['name', 'DESC']);
     }
-    if (data.sortByOrder) {
+    if (objKeys.includes('sortByOrder')) {
       order.push(['id', 'DESC']);
     }
     return await this.pgTags.findAndCountAll({
       include: { model: Users, attributes: ['uid', 'nickname'] },
-      attributes: ['name', 'sortOrder'],
+      // attributes: ['name', 'sortOrder'],
       offset: data.offset ? data.offset : undefined,
       limit: data.length ? data.length : undefined,
       order: order.length !== 0 ? order : undefined,

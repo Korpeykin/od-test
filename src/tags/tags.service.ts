@@ -68,6 +68,9 @@ export class TagsService {
     body: PutTagDto,
   ): Promise<GetTagResponse> {
     const tag = await this.dbService.getTag(id);
+    if (!tag) {
+      throw new BadRequestException('There is not tag with this id');
+    }
     if (tag.user.uid !== userId) {
       throw new BadRequestException("You are not this tag's owner!");
     }
@@ -95,6 +98,9 @@ export class TagsService {
 
   async deleteTag(userId: string, id: number) {
     const tag = await this.dbService.getTag(id);
+    if (!tag) {
+      throw new BadRequestException('There is not tag with this id');
+    }
     if (tag.user.uid !== userId) {
       throw new BadRequestException("You are not this tag's owner!");
     }
@@ -106,6 +112,9 @@ export class TagsService {
     body: PostUserTagsDto,
     userId: string,
   ): Promise<PostUserTags> {
+    if (this.hasDuplicates(body.tags)) {
+      throw new BadRequestException(`Arr have duplicates!`);
+    }
     const tags = await this.dbService.getAllTagsFromArray(body.tags);
     const dbQuery: UserTagInsert[] = [];
     body.tags.forEach((tagId) => {
@@ -129,6 +138,10 @@ export class TagsService {
       });
     });
     return apiResponse;
+  }
+
+  hasDuplicates(arr: number[]) {
+    return new Set(arr).size !== arr.length;
   }
 
   async deleteUserTag(id: number, uid: string): Promise<PostUserTags> {

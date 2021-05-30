@@ -69,9 +69,9 @@ export class AuthService {
   async login(user: IUser) {
     const payload = { username: user.email, sub: user.uid };
     return {
-      user,
       refresh_token: await this.generateRefresh(user.email),
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
+      expire: this.config.get<number>('JWT_EXPIRATION_TIME'),
     };
   }
 

@@ -33,7 +33,7 @@ export class UsersController {
   async putUser(@Request() req, @Body() data: PutUserDto) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     await this.authService.authJwt(token);
-    return this.usersService.putUser(data);
+    return this.usersService.putUser(data, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

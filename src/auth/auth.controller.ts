@@ -43,8 +43,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  logout(@Request() req) {
+  async logout(@Request() req) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    await this.authService.authJwt(token);
     this.authService.logout(req.user, token);
     return;
   }

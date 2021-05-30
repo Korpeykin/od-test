@@ -1,26 +1,26 @@
 import {
   IsEmail,
-  IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MinLength,
 } from 'class-validator';
 
 export default class PutUserDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  nickname: string;
+  nickname?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message:
       'Password too weak! It should have at least one literal, one uppercase, and one digit!',
   })
-  password: string;
+  password?: string;
 }
