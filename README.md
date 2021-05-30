@@ -68,6 +68,185 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
+## Описание апи:
+
+## Модуль auth:
+# POST /auth/signin
+
+Регистрация нового пользователя:
+
+Вход:
+
+```json
+{
+  "email": "example@exe.com",
+  "password": "example",
+  "nickname": "nickname"
+}
+```
+
+Валидация:
+
+- email - Обязательное поле, проверка на то, что это Емайл. Проверка на уникальность в БД
+- password - Обязательное поле. Минимум 8 символов, должна быть хотябы одна буква в нижнем и верхнем регистре, должна быть хотябы одна цыфра
+- nickname - Обязательное поле. Проверка на то, что это строка, и не пустая.
+
+Выход:
+
+```json
+{
+  "token": "token",
+  "refresh_token": "token",
+  "expire": "18000000"
+}
+```
+
+# POST /auth/login
+
+Аутентификация пользователя:
+
+Вход:
+
+```json
+{
+  "email": "example@exe.com",
+  "password": "Lakazjabka20"
+}
+```
+
+Валидация - если входные данные не соответствуют данному формату, или таких данных нет в базе, выдается 401 ошибка.
+
+Выход:
+
+```json
+{
+  "token": "token",
+  "refresh_token": "token",
+  "expire": "18000000"
+}
+```
+
+# GET /auth/profile
+
+Роут для проверки токена при переходе со страницы на страницу на фронте
+
+Вход:
+
+HEADER: ```Authorization: Bearer {token}```
+
+Выход:
+
+```json
+{
+  "userId": "uuid",
+  "username": "example@exe.com"
+}
+```
+# POST /auth/refresh-access
+
+Выдача нового аксес токена, при предоставлении валидного рефреш-токена
+
+Вход:
+
+```json
+{
+  "refresh_token": "e320b977-c565-48ac-b8a9-e8caf11ea4d6",
+  "username": "example@exe.com",
+  "userId": "uuid"
+}
+```
+
+Валидация:
+
+- refresh_token - Обязательное поле, проверка на то, что это uuid(v4)
+- username - Обязательное поле. Проверка на то, что это строка, и не пустая
+- userId - Обязательное поле. Проверка на то, что это строка, и не пустая.
+
+Выход:
+
+```json
+{
+  "refresh_token": "uuid",
+  "access_token": "token"
+}
+```
+# GET /auth/logout
+
+Разлогинивание пользователя.
+
+Вход:
+
+HEADER: ```Authorization: Bearer {token}```
+
+## Модуль user:
+# GET /users/user
+
+Получение данных юзера:
+
+Вход:
+
+HEADER: ```Authorization: Bearer {token}```
+
+Выход:
+
+```json
+{
+  "email": "example@exe.com",
+  "nickname": "nickname",
+  "tags": [
+    {
+      "id": 9,
+      "name": "WitchersaP",
+      "sortOrder": 0
+    },
+    {
+      "id": 10,
+      "name": "a",
+      "sortOrder": 9
+    },
+    {
+      "id": 11,
+      "name": "b",
+      "sortOrder": 9
+    },
+    {
+      "id": 12,
+      "name": "c",
+      "sortOrder": 9
+    }
+  ]
+}
+```
+
+# PUT /users/put-user
+
+Вход:
+
+HEADER: ```Authorization: Bearer {token}```
+
+```json
+{
+  "email": "chang1e@exe.com",
+  "password": "Lakazjabka20",
+  "nickname": "chang1e"
+}
+```
+Валидация:
+
+- refresh_token - Обязательное поле, проверка на то, что это uuid(v4)
+- username - Обязательное поле. Проверка на то, что это строка, и не пустая
+- userId - Обязательное поле. Проверка на то, что это строка, и не пустая.
+
+Выход:
+
+```json
+{
+  "email": "chang1e@exe.com",
+  "nickname": "chang1e"
+}
+```
+
 ## License
+
 
 Nest is [MIT licensed](LICENSE).

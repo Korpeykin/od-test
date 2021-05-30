@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumberString, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export default class RefreshAccessDto {
   @IsNotEmpty()
@@ -10,6 +10,6 @@ export default class RefreshAccessDto {
   email: string;
 
   @IsNotEmpty()
-  @IsNumberString()
+  @IsString()
   uid: string;
 }

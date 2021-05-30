@@ -15,6 +15,9 @@ export class UsersService {
 
   async getUser(user: UserJwt): Promise<GetUser> {
     const data = await this.dbService.getUser(user.userId);
+    if (!data) {
+      throw new BadRequestException(`This user does not exists!`);
+    }
     return {
       email: data.email,
       nickname: data.nickname,
@@ -31,6 +34,9 @@ export class UsersService {
       throw new BadRequestException(`Dublicate email or nickname!`);
     }
     const user = await this.dbService.putUser(uid);
+    if (!user) {
+      throw new BadRequestException(`This user does not exists!`);
+    }
     if (data.email) {
       user.email = data.email;
     }
